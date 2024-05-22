@@ -1,6 +1,6 @@
 # cnt_mobile
 
-MyA  final year project on visualizing the effect of vibration on pre-tensioned Single-Walled Carbon Nanotube.
+My final year project on visualizing the effect of vibration on pre-tensioned Single-Walled Carbon Nanotube.
 
 ## Getting Started
 
