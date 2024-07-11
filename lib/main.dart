@@ -1,125 +1,212 @@
+import 'dart:async';
+
+import 'dart:math';
+import 'package:cnt_mobile/src/features/home/home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return ProviderScope(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: const SplashhScreen(),
+        routes: {
+          '/navigation': (context) => const CNTNavigation(),
+        },
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class SplashhScreen extends StatefulWidget {
+  const SplashhScreen({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<SplashhScreen> createState() => _SplashhScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _SplashhScreenState extends State<SplashhScreen> with TickerProviderStateMixin {
+  late AnimationController _sizeController;
+  late Animation<double> _sizeAnimation;
+  late AnimationController _rotationController;
+  late List<AnimationController> _participantControllers;
+  late List<Animation<double>> _participantAnimations;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+  @override
+  void initState() {
+    super.initState();
+
+    _sizeController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 3),
+    );
+
+    _sizeAnimation = Tween<double>(begin: 0.0, end: 100.0).animate(
+      CurvedAnimation(parent: _sizeController, curve: Curves.easeInOut),
+    );
+
+    _rotationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 8),
+    );
+
+    _participantControllers = List.generate(4, (index) {
+      return AnimationController(
+        vsync: this,
+        duration: const Duration(seconds: 4),
+      );
+    });
+
+    _participantAnimations = _participantControllers.map((controller) {
+      return Tween<double>(begin: 0.0, end: 60.0).animate(
+        CurvedAnimation(parent: controller, curve: Curves.easeInOut),
+      );
+    }).toList();
+
+    _sizeController.forward();
+    _rotationController.repeat();
+
+    Timer(const Duration(milliseconds: 1000), () {
+      _participantControllers[0].forward();
+    });
+
+    Timer(const Duration(milliseconds: 2000), () {
+      _participantControllers[1].forward();
+    });
+
+    Timer(const Duration(milliseconds: 3000), () {
+      _participantControllers[2].forward();
+    });
+
+    Timer(const Duration(milliseconds: 4000), () {
+      _participantControllers[3].forward();
+    });
+
+    Timer(const Duration(seconds: 8), () {
+      Navigator.of(context).pushReplacementNamed('/navigation');
     });
   }
 
   @override
+  void dispose() {
+    _sizeController.dispose();
+    _rotationController.dispose();
+    for (var controller in _participantControllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            AnimatedBuilder(
+              animation: _sizeAnimation,
+              builder: (context, child) {
+                return Container(
+                  width: _sizeAnimation.value,
+                  height: _sizeAnimation.value,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/swcnt.jpeg'),
+                      fit: BoxFit.cover,
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                );
+              },
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            AnimatedBuilder(
+              animation: _rotationController,
+              builder: (context, child) {
+                return Transform.rotate(
+                  angle: _rotationController.value * 2 * pi,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: List.generate(4, (index) {
+                      final double angle = (pi / 2) * index;
+                      return AnimatedBuilder(
+                        animation: _participantAnimations[index],
+                        builder: (context, child) {
+                          return Transform.translate(
+                            offset: Offset(
+                              _sizeAnimation.value * 1.5 * cos(angle),
+                              _sizeAnimation.value * 1.5 * sin(angle),
+                            ),
+                            child: Container(
+                              width: _participantAnimations[index].value,
+                              height: _participantAnimations[index].value,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage('assets/swcnt$index.jpeg'),
+                                  fit: BoxFit.cover,
+                                ),
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.black, width: 1),
+                              ),
+                              child: Center(
+                                child: CustomPaint(
+                                  size: const Size(100, 100),
+                                  painter: ConnectorPainter(
+                                    start: Offset(
+                                      _sizeAnimation.value * cos(angle),
+                                      _sizeAnimation.value * sin(angle),
+                                    ),
+                                    end: Offset(
+                                      _sizeAnimation.value * 1.5 * cos(angle),
+                                      _sizeAnimation.value * 1.5 * sin(angle),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }),
+                  ),
+                );
+              },
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+}
+
+class ConnectorPainter extends CustomPainter {
+  final Offset start;
+  final Offset end;
+
+  ConnectorPainter({required this.start, required this.end});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.black
+      ..strokeWidth = 2;
+
+    canvas.drawLine(start, end, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
   }
 }
