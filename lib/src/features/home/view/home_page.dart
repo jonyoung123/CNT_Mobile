@@ -1,6 +1,5 @@
-import 'package:cnt_mobile/src/features/history/view/test.dart';
-import 'package:cnt_mobile/src/features/history/view/test2.dart';
 import 'package:cnt_mobile/src/features/history/view/view.dart';
+import 'package:cnt_mobile/src/features/machine_learning/view/view.dart';
 import 'package:cnt_mobile/src/utils/components/components.dart';
 import 'package:cnt_mobile/src/utils/constants/constant.dart';
 import 'package:cnt_mobile/src/utils/extensions/string_extensions.dart';
@@ -64,12 +63,12 @@ class HomePage extends StatelessWidget {
                   children: [
                     BlackButton(
                       label: "View History",
-                      onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const HistoryPage())),
+                      onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const HistoryScreen())),
                     ),
                     const SizedBox(height: 16),
                     WhiteButton(
                       label: "Proceed to ML",
-                      onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const HistoryScreens())),
+                      onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ProjectDataScreen())),
                     )
                   ],
                 ),

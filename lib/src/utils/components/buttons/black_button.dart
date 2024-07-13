@@ -13,19 +13,22 @@ class BlackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: onPressed,
-      onLongPress: onPressed,
-      style: TextButton.styleFrom(
-        backgroundColor: AppColors.black200,
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+    return SizedBox(
+      width: double.infinity,
+      child: TextButton(
+        onPressed: onPressed,
+        onLongPress: onPressed,
+        style: TextButton.styleFrom(
+          backgroundColor: AppColors.black200,
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
         ),
-      ),
-      child: label.interStyled(
-        color: AppColors.green100,
-        fontWeight: FontWeight.w500,
+        child: label.interStyled(
+          color: AppColors.green100,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }
