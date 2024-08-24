@@ -1,3 +1,4 @@
+import 'package:cnt_mobile/src/utils/components/widgets/app_loader.dart';
 import 'package:cnt_mobile/src/utils/constants/colors.dart';
 import 'package:cnt_mobile/src/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
@@ -6,10 +7,12 @@ class BlackButton extends StatelessWidget {
   const BlackButton({
     super.key,
     this.onPressed,
+    this.status = false,
     required this.label,
   });
   final VoidCallback? onPressed;
   final String label;
+  final bool status;
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +28,12 @@ class BlackButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
         ),
-        child: label.interStyled(
-          color: AppColors.green100,
-          fontWeight: FontWeight.w500,
-        ),
+        child: status
+            ? const AppLoader()
+            : label.interStyled(
+                color: AppColors.green100,
+                fontWeight: FontWeight.w500,
+              ),
       ),
     );
   }
